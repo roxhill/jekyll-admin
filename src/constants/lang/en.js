@@ -68,6 +68,10 @@ export const labels = {
   delete: {
     label: 'Delete'
   },
+  copy: {
+    label: 'Copy',
+    triggeredLabel: 'Copied'
+  },
   view: {
     label: 'View'
   },

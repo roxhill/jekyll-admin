@@ -13,7 +13,7 @@ import InputPath from '../../components/form/InputPath';
 import InputTitle from '../../components/form/InputTitle';
 import MarkdownEditor from '../../components/MarkdownEditor';
 import Metadata from '../../containers/MetaFields';
-import { fetchDocument, deleteDocument, putDocument } from '../../actions/collections';
+import { fetchDocument, deleteDocument, putDocument, createDocument } from '../../actions/collections';
 import { updateTitle, updateBody, updatePath } from '../../actions/metadata';
 import { clearErrors } from '../../actions/utils';
 import { injectDefaultFields } from '../../utils/metadata';
@@ -29,6 +29,7 @@ export class DocumentEdit extends Component {
     super(props);
 
     this.handleClickSave = this.handleClickSave.bind(this);
+    this.handleClickCopy = this.handleClickCopy.bind(this);
     this.routerWillLeave = this.routerWillLeave.bind(this);
   }
 
@@ -97,6 +98,18 @@ export class DocumentEdit extends Component {
     }
   }
 
+  handleClickCopy(e) {
+    const { createDocument, params } = this.props;
+
+    // Prevent the default event from bubbling
+    preventDefault(e);
+
+    const collection = params.collection_name;
+    const [directory, ...rest] = params.splat;
+    const filename = 'copy-' + rest.join('.');
+    createDocument(collection, directory || '/');
+  }
+
   render() {
     const {
       isFetching, currentDocument, errors, updateTitle, updateBody, updatePath, updated,
@@ -120,6 +133,7 @@ export class DocumentEdit extends Component {
 
     const keyboardHandlers = {
       'save': this.handleClickSave,
+      'copy': this.handleClickCopy,
     };
 
     const document_title = directory ?
@@ -158,6 +172,13 @@ export class DocumentEdit extends Component {
                 triggered={updated}
                 icon="save"
                 block />
+              <Button
+                onClick={this.handleClickCopy}
+                type="copy"
+                active={true}
+                triggered={updated}
+                icon="copy"
+                block />
               {
                 http_url &&
                   <Button
@@ -188,6 +209,7 @@ DocumentEdit.propTypes = {
   fetchDocument: PropTypes.func.isRequired,
   deleteDocument: PropTypes.func.isRequired,
   putDocument: PropTypes.func.isRequired,
+  createDocument: PropTypes.func.isRequired,
   updateTitle: PropTypes.func.isRequired,
   updateBody: PropTypes.func.isRequired,
   updatePath: PropTypes.func.isRequired,
@@ -215,6 +237,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchDocument,
   deleteDocument,
   putDocument,
+  createDocument,
   updateTitle,
   updateBody,
   updatePath,

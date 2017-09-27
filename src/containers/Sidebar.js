@@ -92,7 +92,6 @@ export class Sidebar extends Component {
 
     return (
       <div className="sidebar">
-        <Link className="logo" to={`${ADMIN_PREFIX}/pages`} />
         <ul className="routes">
           {this.renderCollections(hiddenLinks)}
           {links}
