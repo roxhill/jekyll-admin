@@ -23,6 +23,7 @@ const setup = (props = defaultProps) => {
   const actions = {
     fetchDocument: jest.fn(),
     putDocument: jest.fn(),
+    createDocument: jest.fn(),
     deleteDocument: jest.fn(),
     updateTitle: jest.fn(),
     updateBody: jest.fn(),
