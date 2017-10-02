@@ -63,10 +63,9 @@ export class Sidebar extends Component {
         splitterBefore: true
       },
       versions: {
-        icon: 'cog',
+        icon: 'code-fork',
         link: 'versions',
-        translation: 'versions',
-        splitterBefore: true
+        translation: 'versions'
       },
     };
 

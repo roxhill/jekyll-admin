@@ -9,7 +9,7 @@ module JekyllAdmin
 
       get "/list" do
         begin
-          json(list_branches)
+          json(list_branches.map! {|name| {:name => name}})
         rescue ArgumentError
           json([])
         end
