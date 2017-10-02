@@ -43,7 +43,7 @@ export function loadVersion(name) {
   return (dispatch, getState) => {
     dispatch({ type: ActionTypes.LOAD_VERSION_REQUEST});
     return get(
-      versionAPIUrl('load'),
+      versionAPIUrl(`load?version=${name}`),
       { type: ActionTypes.LOAD_VERSION_SUCCESS, name: 'version'},
       { type: ActionTypes.LOAD_VERSION_FAILURE, name: 'error'},
       dispatch

@@ -10,7 +10,7 @@ export default class Button extends Component {
     const btnClass = classnames({
       'btn': true,
       'btn-active': active,
-      'btn-success': active && (type == 'save' || type == 'create' || type == 'copy'),
+      'btn-success': active && (type == 'save' || type == 'create' || type == 'copy' || type == 'publish'),
       'btn-delete': type == 'delete',
       'btn-view': type == 'view',
       'btn-inactive': !active,
@@ -29,8 +29,17 @@ export default class Button extends Component {
         label = labels.create.label;
         triggeredLabel = labels.create.triggeredLabel;
         break;
+      case 'new':
+        label = labels.new.label;
+        break;
       case 'delete':
         label = labels.delete.label;
+        break;
+      case 'publish':
+        label = labels.publish.label;
+        break;
+      case 'load':
+        label = labels.load.label;
         break;
       case 'copy':
         label = labels.copy.label;

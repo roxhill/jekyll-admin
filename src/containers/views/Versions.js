@@ -6,8 +6,8 @@ import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
 import Breadcrumbs from '../../components/Breadcrumbs';
 import Button from '../../components/Button';
-import { listVersions, loadVersion } from '../../actions/versions';
-import { getDeleteMessage, getNotFoundMessage } from '../../constants/lang';
+import { listVersions, createVersion, loadVersion, promoteVersion, deleteVersion } from '../../actions/versions';
+import { getDeleteMessage, getSureMessage, getNotFoundMessage } from '../../constants/lang';
 import { ADMIN_PREFIX } from '../../constants';
 
 export class Versions extends Component {
@@ -24,16 +24,36 @@ export class Versions extends Component {
     }
   }
 
-  handleClickLoad(name) {
-    const { loadVersion, params } = this.props;
-    const confirm = window.confirm(getDeleteMessage(name));
-    if (confirm) {
-      loadVersion(params.splat, name);
+  handleClickNew() {
+    console.log('handleClickNew');
+    const { createVersion, params } = this.props;
+    createVersion(params.splat, name);
+  }
+
+  handleClickPublish(name) {
+    console.log('handleClickPublish');
+    const { promoteVersion, params } = this.props;
+    if (window.confirm(getSureMessage())) {
+      promoteVersion(params.splat, name);
     }
   }
 
+  handleClickDelete(name) {
+    console.log('handleClickDelete');
+    const { deleteVersion, params } = this.props;
+    if (window.confirm(getDeleteMessage(name))) {
+      deleteVersion(params.splat, name);
+    }
+  }
+
+  handleClickLoad(name) {
+    console.log('handleClickLoad');
+    const { loadVersion, params } = this.props;
+    loadVersion(params.splat, name);
+  }
+
   renderVersionRow(version) {
-    const { name } = version;
+    const { name, active, prod } = version;
     return (
       <tr key={name}>
         <td className="row-title">
@@ -45,10 +65,22 @@ export class Versions extends Component {
         <td>
           <div className="row-actions">
             <Button
-              onClick={() => this.handleClickLoad(name)}
-              type="view"
+              onClick={() => active && !prod && this.handleClickPublish(name)}
+              type="publish"
+              icon="cloud-upload"
+              active={active && !prod}
+              thin />
+            <Button
+              onClick={() => active && this.handleClickDelete(name)}
+              type="delete"
+              icon="trash"
+              active={active && !prod}
+              thin />
+            <Button
+              onClick={() => active || this.handleClickLoad(name)}
+              type="load"
               icon="eye"
-              active={true}
+              active={!active && !prod}
               thin />
           </div>
         </td>
@@ -57,7 +89,7 @@ export class Versions extends Component {
   }
 
   renderRows() {
-    const versions = this.props.versions || [];
+    const { versions } = this.props;
     return _.map(versions, entry => {
       return this.renderVersionRow(entry);
     });
@@ -80,10 +112,7 @@ export class Versions extends Component {
   }
 
   render() {
-    const { isFetching, params } = this.props;
-    const versions = this.props.versions || [];
-
-    console.log(this.props);
+    const { isFetching, versions, params } = this.props;
 
     if (isFetching) {
       return null;
@@ -95,9 +124,14 @@ export class Versions extends Component {
       <DocumentTitle title={title}>
         <div>
           <div className="content-header">
-            <Breadcrumbs type="versions" splat={params.splat || ''} />
-            <div className="version-buttons">
-              <Link className="btn btn-active">New version</Link>
+            <Breadcrumbs type="versions" splat={''} />
+            <div className="page-buttons">
+              <Button
+                onClick={() => this.handleClickNew()}
+                type="new"
+                icon="plus"
+                active={true}
+              />
             </div>
           </div>
           {
@@ -115,18 +149,26 @@ export class Versions extends Component {
 Versions.propTypes = {
   versions: PropTypes.array.isRequired,
   listVersions: PropTypes.func.isRequired,
+  createVersion: PropTypes.func.isRequired,
   loadVersion: PropTypes.func.isRequired,
+  promoteVersion: PropTypes.func.isRequired,
+  deleteVersion: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
   params: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
-  isFetching: state.versions.isFetching
+  isFetching: state.versions.isFetching,
+  versions: state.versions.versions,
+  version: state.versions.version
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   listVersions,
-  loadVersion
+  createVersion,
+  loadVersion,
+  promoteVersion,
+  deleteVersion
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Versions);

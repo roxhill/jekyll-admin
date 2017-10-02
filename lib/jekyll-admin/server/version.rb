@@ -9,31 +9,31 @@ module JekyllAdmin
 
       get "/list" do
         begin
-          json(list_branches.map! {|name| {:name => name}})
+          json(list_branches)
         rescue ArgumentError
           json([])
         end
       end
 
       get "/create" do
-        json({:name => create_branch})
+        json(create_branch)
       end
 
       get "/save" do
-        json({:name => save_branch})
+        json(save_branch)
       end
 
       get "/load" do
         version = params[:version]
-        json({:name => load_branch(version)})
+        json(load_branch(version))
       end
 
       get "/promote" do
-        json({:name => promote_branch})
+        json(promote_branch)
       end
 
       get "/delete" do
-        json({:name => delete_branch})
+        json(delete_branch)
       end
 
       private
@@ -50,9 +50,19 @@ module JekyllAdmin
 
       # 'List' all versions by filter branch list.
       def list_branches
+        # [
+        #   { :name => 'marketing', :active => false, :prod => true},
+        #   { :name => 'marketing-1234', :active => true, :prod => false},
+        #   { :name => 'marketing-5678', :active => false, :prod => false}
+        # ]
         g = open_repo
-        g.branches.local.select do |branch|
-          branch.name.include? "marketing"
+        branches = g.branches.local.select{ |branch| branch.name.include? "marketing" }
+        branches.map do |branch|
+            {
+                :name => branch.name,
+                :active => (branch_name.eql? g.current_branch.name),
+                :prod => (branch_name.eql? PRODUCTION_BRANCH)
+            }
         end
       end
 
@@ -60,16 +70,23 @@ module JekyllAdmin
       def create_branch
         new_branch_name = DRAFT_BRANCH_PREFIX + (Time.now.utc.to_i.to_s)
         g = open_repo
+
         g.branch(PRODUCTION_BRANCH).checkout
         g.branch(new_branch_name).create
         g.branch(new_branch_name).checkout
         #g.push
-        g.current_branch
+
+        {
+            :name => g.current_branch,
+            :active => true,
+            :prod => false
+        }
       end
 
       # 'Save' a version by adding all in current branch and commiting.
       def save_branch
         g = open_repo
+
         begin
           g.add(:all=>true)
           g.commit("Site updated by admin.")
@@ -77,7 +94,12 @@ module JekyllAdmin
         rescue Git::GitExecuteError
           Jekyll.logger.warn "No changes to save: " + $!.message
         end
-        g.current_branch
+
+        {
+            :name => g.current_branch,
+            :active => true,
+            :prod => (g.current_branch == PRODUCTION_BRANCH)
+        }
       end
 
       # 'Load' a version by saving current branch and checking out another branch.
@@ -85,18 +107,29 @@ module JekyllAdmin
         save_branch
         g = open_repo
         g.branch(branch_name).checkout
-        g.current_branch
+
+        {
+            :name => g.current_branch,
+            :active => true,
+            :prod => (g.current_branch == PRODUCTION_BRANCH)
+        }
       end
 
       # 'Promote' a version by merging it into site prod branch.
       def promote_branch
         save_branch
         g = open_repo
+
         branch_name = g.current_branch
         g.branch(PRODUCTION_BRANCH).checkout
         g.merge(branch_name)
         #g.push
-        g.current_branch
+
+        {
+            :name => g.current_branch,
+            :active => true,
+            :prod => true
+        }
       end
 
       def delete_branch
@@ -104,9 +137,14 @@ module JekyllAdmin
         g = open_repo
         branch_name = g.current_branch
         g.branch(PRODUCTION_BRANCH).checkout
-        g.branch('branch_name').delete
+        g.branch(branch_name).delete
         #g.push
-        g.current_branch
+
+        {
+            :name => g.current_branch,
+            :active => true,
+            :prod => true
+        }
       end
     end
   end
