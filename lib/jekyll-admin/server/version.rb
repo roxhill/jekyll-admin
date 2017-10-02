@@ -8,7 +8,11 @@ module JekyllAdmin
     namespace "/version" do
 
       get "/list" do
-        json(list_branches)
+        begin
+          json(list_branches)
+        rescue ArgumentError
+          json([])
+        end
       end
 
       get "/create" do
