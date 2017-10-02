@@ -55,7 +55,11 @@ module JekyllAdmin
     end
 
     def host
-      JekyllAdmin.site.config["host"].sub("127.0.0.1", "localhost")
+      if JekyllAdmin.site.config["url"]
+        Addressable::URI.parse(JekyllAdmin.site.config["url"]).host
+      else
+        JekyllAdmin.site.config["host"].sub("127.0.0.1", "localhost")
+      end
     end
 
     def port
