@@ -62,6 +62,12 @@ export class Sidebar extends Component {
         translation: 'configuration',
         splitterBefore: true
       },
+      versions: {
+        icon: 'cog',
+        link: 'versions',
+        translation: 'versions',
+        splitterBefore: true
+      },
     };
 
     const defaultLinks = _.keys(defaults);

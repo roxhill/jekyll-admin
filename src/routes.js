@@ -14,6 +14,7 @@ import DataFiles from './containers/views/DataFiles';
 import DataFileEdit from './containers/views/DataFileEdit';
 import DataFileNew from './containers/views/DataFileNew';
 import StaticFiles from './containers/views/StaticFiles';
+import Versions from './containers/views/Versions';
 import NotFound from './containers/views/NotFound';
 
 export default (
@@ -25,6 +26,10 @@ export default (
       <Route path="(**/)new" component={PageNew} />
       <Route path="(**/)*.*" component={PageEdit} />
       <Route path="**" component={Pages} />
+    </Route>
+    <Route path="versions">
+      <IndexRoute component={Versions} />
+      <Route path="**" component={Versions} />
     </Route>
     <Route path="collections">
       <Route path=":collection_name">

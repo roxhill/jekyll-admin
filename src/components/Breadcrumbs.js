@@ -14,6 +14,8 @@ export default class Breadcrumbs extends Component {
       base = `${ADMIN_PREFIX}/pages`;
     } else if (type == 'data files') {
       base = `${ADMIN_PREFIX}/datafiles`;
+    } else if (type == 'versions') {
+      base = `${ADMIN_PREFIX}/versions`;
     } else {
       base = `${ADMIN_PREFIX}/collections/${type}`;
     }

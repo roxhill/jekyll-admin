@@ -23,3 +23,6 @@ export const datafileAPIUrl = (directory, filename) =>
 
 export const staticfilesAPIUrl = () => `${API}/static_files`;
 export const staticfileAPIUrl = (filename) => `${API}/static_files/${filename}`;
+
+export const versionsAPIUrl = () => `${API}/version`;
+export const versionAPIUrl = (filename) => `${API}/version/${filename}`;

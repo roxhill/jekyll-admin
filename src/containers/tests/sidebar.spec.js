@@ -11,7 +11,7 @@ const defaultProps = {
   collections,
 };
 
-const nonCollectionLinks = ['pages', 'datafiles', 'staticfiles', 'configuration'];
+const nonCollectionLinks = ['pages', 'datafiles', 'staticfiles', 'configuration', 'versions'];
 
 function setup(props = defaultProps) {
   const actions = {
@@ -68,6 +68,6 @@ describe('Containers::Sidebar', () => {
         jekyll_admin: {}
       }
     }));
-    expect(links.length).toEqual(4);
+    expect(links.length).toEqual(nonCollectionLinks.length);
   });
 });
