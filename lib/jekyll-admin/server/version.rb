@@ -60,7 +60,7 @@ module JekyllAdmin
         branches.map do |branch|
             {
                 :name => branch.name,
-                :active => (branch.name.eql? g.current_branch.name),
+                :active => (branch.name.eql? g.current_branch),
                 :prod => (branch.name.eql? PRODUCTION_BRANCH)
             }
         end
