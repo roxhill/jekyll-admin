@@ -28,6 +28,10 @@ module JekyllAdmin
         json({:name => promote_branch})
       end
 
+      get "/delete" do
+        json({:name => delete_branch})
+      end
+
       private
 
       def open_repo
@@ -87,6 +91,16 @@ module JekyllAdmin
         branch_name = g.current_branch
         g.branch(PRODUCTION_BRANCH).checkout
         g.merge(branch_name)
+        #g.push
+        g.current_branch
+      end
+
+      def delete_branch
+        save_branch
+        g = open_repo
+        branch_name = g.current_branch
+        g.branch(PRODUCTION_BRANCH).checkout
+        g.branch('branch_name').delete
         #g.push
         g.current_branch
       end
