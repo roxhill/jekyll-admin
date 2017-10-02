@@ -63,7 +63,11 @@ module JekyllAdmin
     end
 
     def port
-      JekyllAdmin.site.config["port"]
+      if JekyllAdmin.site.config["url"]
+        Addressable::URI.parse(JekyllAdmin.site.config["url"]).port
+      else
+        JekyllAdmin.site.config["port"]
+      end
     end
   end
 end
