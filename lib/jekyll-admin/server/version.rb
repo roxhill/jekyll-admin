@@ -48,20 +48,23 @@ module JekyllAdmin
         end
       end
 
+      def git_branch
+        src_dir = JekyllAdmin.site.source
+        cmd = "cd #{src_dir} && git branch -l"
+        `#{cmd}`.split("\n").map do |branch|
+            branch.scan(/^[\s\*]*([\w\-]+)$/).last.first
+        end
+      end
+
       # 'List' all versions by filter branch list.
       def list_branches
-        # [
-        #   { :name => 'marketing', :active => false, :prod => true},
-        #   { :name => 'marketing-1234', :active => true, :prod => false},
-        #   { :name => 'marketing-5678', :active => false, :prod => false}
-        # ]
-        g = open_repo
-        branches = g.branches.local.select{ |branch| branch.name.include? "marketing" }
-        branches.map do |branch|
+        current_branch = open_repo.current_branch
+        branches = git_branch.select{ |branch_name| branch_name.include? PRODUCTION_BRANCH }
+        branches.map do |branch_name|
             {
-                :name => branch.name,
-                :active => (branch.name.eql? g.current_branch),
-                :prod => (branch.name.eql? PRODUCTION_BRANCH)
+                :name => branch_name,
+                :active => (branch_name.eql? current_branch),
+                :prod => (branch_name.eql? PRODUCTION_BRANCH)
             }
         end
       end
