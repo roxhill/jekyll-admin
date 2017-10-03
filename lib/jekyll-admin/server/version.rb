@@ -52,7 +52,7 @@ module JekyllAdmin
         src_dir = JekyllAdmin.site.source
         cmd = "cd #{src_dir} && git branch -l"
         `#{cmd}`.split("\n").map do |branch|
-            branch.scan(/^[\s\*]*([\w\-]+)$/).last.first
+            branch.scan(/^[\s\*]*([\w\-\.\/]+)$/).last.first
         end
       end
 
