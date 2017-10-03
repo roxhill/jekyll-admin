@@ -40,6 +40,7 @@ export function saveVersion() {
 }
 
 export function loadVersion(name) {
+  console.log('loadVersion', arguments);
   return (dispatch, getState) => {
     dispatch({ type: ActionTypes.LOAD_VERSION_REQUEST});
     return get(

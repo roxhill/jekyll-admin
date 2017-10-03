@@ -25,13 +25,13 @@ export class Versions extends Component {
   }
 
   handleClickNew() {
-    console.log('handleClickNew');
+    console.log('handleClickNew', arguments);
     const { createVersion, params } = this.props;
     createVersion(params.splat, name);
   }
 
   handleClickPublish(name) {
-    console.log('handleClickPublish');
+    console.log('handleClickPublish', arguments);
     const { promoteVersion, params } = this.props;
     if (window.confirm(getSureMessage())) {
       promoteVersion(params.splat, name);
@@ -39,7 +39,7 @@ export class Versions extends Component {
   }
 
   handleClickDelete(name) {
-    console.log('handleClickDelete');
+    console.log('handleClickDelete', arguments);
     const { deleteVersion, params } = this.props;
     if (window.confirm(getDeleteMessage(name))) {
       deleteVersion(params.splat, name);
@@ -47,7 +47,7 @@ export class Versions extends Component {
   }
 
   handleClickLoad(name) {
-    console.log('handleClickLoad');
+    console.log('handleClickLoad', arguments);
     const { loadVersion, params } = this.props;
     loadVersion(params.splat, name);
   }
