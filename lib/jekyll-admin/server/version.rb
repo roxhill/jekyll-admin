@@ -77,7 +77,7 @@ module JekyllAdmin
         g.branch(PRODUCTION_BRANCH).checkout
         g.branch(new_branch_name).create
         g.branch(new_branch_name).checkout
-        #g.push
+        g.push
 
         {
             :name => g.current_branch,
@@ -91,9 +91,9 @@ module JekyllAdmin
         g = open_repo
 
         begin
-          g.add(:all=>true)
+          g.add('.')
           g.commit("Site updated by admin.")
-          #g.push
+          g.push
         rescue Git::GitExecuteError
           Jekyll.logger.warn "No changes to save: " + $!.message
         end
@@ -126,7 +126,7 @@ module JekyllAdmin
         branch_name = g.current_branch
         g.branch(PRODUCTION_BRANCH).checkout
         g.merge(branch_name)
-        #g.push
+        g.push
 
         {
             :name => g.current_branch,
@@ -141,7 +141,7 @@ module JekyllAdmin
         branch_name = g.current_branch
         g.branch(PRODUCTION_BRANCH).checkout
         g.branch(branch_name).delete
-        #g.push
+        g.push
 
         {
             :name => g.current_branch,
