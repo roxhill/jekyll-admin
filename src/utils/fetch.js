@@ -39,6 +39,45 @@ export const get = (url, action_success, action_failure, dispatch) => {
 };
 
 /**
+ * Fetch wrapper for POST request that dispatches actions according to the
+ * request status
+ * @param {String} url
+ * @param {Object} body
+ * @param {Object} action_success
+ * @param {Object} action_failure
+ * @return {Function} dispatch
+ */
+export const post = (url, body, action_success, action_failure, dispatch) => {
+  return fetch(url, {
+    method: 'POST',
+    credentials: "include",
+    body
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.error_message){
+      throw new BadInputError(data.error_message);
+    }
+    dispatch({
+      type: action_success.type,
+      [action_success.name]: data
+    });
+  })
+  .catch(error => {
+    dispatch({
+      type: action_failure.type,
+      [action_failure.name]: error
+    });
+    let error_message = error.name ==='BadInputError' ? error.message : getUpdateErrorMessage(action_success.name);
+    dispatch(addNotification(
+      getErrorMessage(),
+      error_message,
+      'error'
+    ));
+  });
+};
+
+/**
  * Fetch wrapper for PUT request that dispatches actions according to the
  * request status
  * @param {String} url

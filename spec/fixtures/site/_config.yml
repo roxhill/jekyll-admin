@@ -12,6 +12,11 @@ exclude:
 
 foo: bar
 
+jekyll_admin:
+    versioning:
+        prod_branch_name: "master"
+        draft_branch_prefix: "draft-"
+
 defaults:
   -
     scope:
