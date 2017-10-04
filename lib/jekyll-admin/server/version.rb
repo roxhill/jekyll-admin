@@ -71,9 +71,9 @@ module JekyllAdmin
       end
 
       # Execute an arbitrary git command.
-      def git_cmd(args)
-        cmd = "git --git-dir='#{src_dir}/.git' --work-tree='#{src_dir}' #{cmd} 2>&1"
-        Jekyll.logger.warn cmd
+      def git_cmd(git_command_args)
+        cmd = "git --git-dir='#{src_dir}/.git' --work-tree='#{src_dir}' #{git_command_args} 2>&1"
+        Jekyll.logger.warn "               Git: " + cmd
         `#{cmd}`.split("\n")
       end
 
