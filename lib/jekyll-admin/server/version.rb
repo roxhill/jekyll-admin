@@ -73,8 +73,10 @@ module JekyllAdmin
       # Execute an arbitrary git command.
       def git_cmd(git_command_args)
         cmd = "git --git-dir='#{src_dir}/.git' --work-tree='#{src_dir}' #{git_command_args} 2>&1"
-        Jekyll.logger.warn "               Git: " + cmd
-        `#{cmd}`.split("\n")
+        Jekyll.logger.warn "             Git I: " + cmd
+        result = `#{cmd}`
+        Jekyll.logger.warn "             Git O: " + result.sub("\n", ' ')[0,150]
+        result.split("\n")
       end
 
       # Get the current branch name.
