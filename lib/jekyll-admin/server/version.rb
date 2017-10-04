@@ -108,6 +108,10 @@ module JekyllAdmin
       # Create, checkout and push a new branch.
       def create_branch
         new_branch_name = draft_branch_name_prefix + (Time.now.utc.to_i.to_s)
+
+        save_branch
+        git_cmd("checkout #{prod_branch_name}")
+        save_branch
         git_cmd("branch #{new_branch_name}")
         git_cmd("checkout #{new_branch_name}")
         git_cmd("push -u")
