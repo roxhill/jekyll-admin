@@ -160,7 +160,7 @@ module JekyllAdmin
         deleted_branch_name = get_current_branch_name
 
         git_cmd("checkout #{prod_branch_name}")
-        git_cmd("push -d origin #{deleted_branch_name}")
+        git_cmd("push origin --delete #{deleted_branch_name}")
         git_cmd("branch -D #{deleted_branch_name}")
 
         transform_branch_name_to_map(prod_branch_name)
