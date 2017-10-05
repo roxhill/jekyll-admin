@@ -135,7 +135,7 @@ module JekyllAdmin
 
         git_cmd("checkout #{branch_name}")
         git_cmd("pull")
-        git_cmd("git reset --hard HEAD")
+        git_cmd("reset --hard HEAD")
 
         transform_branch_name_to_map(branch_name)
       end
