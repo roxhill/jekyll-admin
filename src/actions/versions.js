@@ -69,7 +69,7 @@ export function deleteVersion() {
   return (dispatch) => {
     dispatch({ type: ActionTypes.DELETE_VERSION_REQUEST});
     return del(
-      versionAPIUrl('delete'),
+      versionsAPIUrl(),
       { type: ActionTypes.DELETE_VERSION_SUCCESS, name: 'version'},
       { type: ActionTypes.DELETE_VERSION_FAILURE, name: 'error'},
       dispatch
