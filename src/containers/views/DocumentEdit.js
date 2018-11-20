@@ -1,4 +1,5 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { browserHistory, withRouter } from 'react-router';
@@ -13,32 +14,29 @@ import InputPath from '../../components/form/InputPath';
 import InputTitle from '../../components/form/InputTitle';
 import MarkdownEditor from '../../components/MarkdownEditor';
 import Metadata from '../../containers/MetaFields';
-import { fetchDocument, deleteDocument, putDocument, createDocument } from '../../actions/collections';
-import { updateTitle, updateBody, updatePath } from '../../actions/metadata';
-import { clearErrors } from '../../actions/utils';
+import {
+  fetchDocument,
+  deleteDocument,
+  putDocument,
+  createDocument
+} from '../../ducks/collections';
+import { updateTitle, updateBody, updatePath } from '../../ducks/metadata';
+import { clearErrors } from '../../ducks/utils';
 import { injectDefaultFields } from '../../utils/metadata';
 import { capitalize, preventDefault } from '../../utils/helpers';
 import {
-  getLeaveMessage, getDeleteMessage, getNotFoundMessage
-} from '../../constants/lang';
+  getLeaveMessage,
+  getDeleteMessage,
+  getNotFoundMessage,
+} from '../../translations';
 import { ADMIN_PREFIX } from '../../constants';
 
 export class DocumentEdit extends Component {
-
-  constructor(props) {
-    super(props);
-
-    this.handleClickSave = this.handleClickSave.bind(this);
-    this.handleClickCopy = this.handleClickCopy.bind(this);
-    this.routerWillLeave = this.routerWillLeave.bind(this);
-  }
-
   componentDidMount() {
     const { fetchDocument, params, router, route } = this.props;
     const [directory, ...rest] = params.splat;
     const filename = rest.join('.');
     fetchDocument(params.collection_name, directory, filename);
-
     router.setRouteLeaveHook(route, this.routerWillLeave);
   }
 
@@ -57,34 +55,28 @@ export class DocumentEdit extends Component {
   }
 
   componentWillUnmount() {
-    const { clearErrors, errors} = this.props;
-    // clear errors if any
-    if (errors.length) {
-      clearErrors();
-    }
+    const { clearErrors, errors } = this.props;
+    errors.length && clearErrors();
   }
 
-  routerWillLeave(nextLocation) {
+  routerWillLeave = nextLocation => {
     if (this.props.fieldChanged) {
       return getLeaveMessage();
     }
-  }
+  };
 
-  handleClickSave(e) {
-    const { putDocument, fieldChanged, params } = this.props;
-
-    // Prevent the default event from bubbling
+  handleClickSave = e => {
     preventDefault(e);
-
+    const { putDocument, fieldChanged, params } = this.props;
     if (fieldChanged) {
       const collection = params.collection_name;
       const [directory, ...rest] = params.splat;
       const filename = rest.join('.');
       putDocument(collection, directory, filename);
     }
-  }
+  };
 
-  handleClickDelete() {
+  handleClickDelete = () => {
     const { deleteDocument, params } = this.props;
     const [directory, ...rest] = params.splat;
     const filename = rest.join('.');
@@ -96,9 +88,9 @@ export class DocumentEdit extends Component {
         `${ADMIN_PREFIX}/collections/${collection}/${directory || ''}`
       );
     }
-  }
+  };
 
-  handleClickCopy(e) {
+  handleClickCopy = (e) => {
     const { createDocument, params } = this.props;
 
     // Prevent the default event from bubbling
@@ -108,12 +100,20 @@ export class DocumentEdit extends Component {
     const [directory, ...rest] = params.splat;
     const filename = 'copy-' + rest.join('.');
     createDocument(collection, directory || '/');
-  }
+  };
 
   render() {
     const {
-      isFetching, currentDocument, errors, updateTitle, updateBody, updatePath, updated,
-      fieldChanged, params, config
+      isFetching,
+      currentDocument,
+      errors,
+      updateTitle,
+      updateBody,
+      updatePath,
+      updated,
+      fieldChanged,
+      params,
+      config,
     } = this.props;
 
     if (isFetching) {
@@ -125,25 +125,34 @@ export class DocumentEdit extends Component {
     }
 
     const {
-      title, raw_content, http_url, collection, front_matter, name
+      title,
+      raw_content,
+      http_url,
+      collection,
+      front_matter,
+      name,
     } = currentDocument;
     const [directory, ...rest] = params.splat;
 
-    const metafields = injectDefaultFields(config, directory, collection, front_matter);
+    const metafields = injectDefaultFields(
+      config,
+      directory,
+      collection,
+      front_matter
+    );
 
     const keyboardHandlers = {
-      'save': this.handleClickSave,
-      'copy': this.handleClickCopy,
+      save: this.handleClickSave,
+      copy: this.handleClickCopy,
     };
 
-    const document_title = directory ?
-      `${title} - ${directory} - ${capitalize(collection)}` :
-      `${title} - ${capitalize(collection)}`;
+    const document_title = directory
+      ? `${title} - ${directory} - ${capitalize(collection)}`
+      : `${title} - ${capitalize(collection)}`;
 
     return (
       <DocumentTitle title={document_title}>
         <HotKeys handlers={keyboardHandlers} className="single">
-
           {errors.length > 0 && <Errors errors={errors} />}
 
           <div className="content-header">
@@ -159,9 +168,12 @@ export class DocumentEdit extends Component {
                 onSave={this.handleClickSave}
                 placeholder="Body"
                 initialValue={raw_content}
-                ref="editor" />
+                ref="editor"
+              />
               <Splitter />
-              <Metadata fields={{title, path: name, raw_content, ...metafields}} />
+              <Metadata
+                fields={{ title, path: name, raw_content, ...metafields }}
+              />
             </div>
 
             <div className="content-side">
@@ -171,33 +183,35 @@ export class DocumentEdit extends Component {
                 active={fieldChanged}
                 triggered={updated}
                 icon="save"
-                block />
+                block
+              />
               <Button
                 onClick={this.handleClickCopy}
                 type="copy"
                 active={true}
                 triggered={updated}
                 icon="copy"
-                block />
-              {
-                http_url &&
-                  <Button
-                    to={http_url}
-                    type="view"
-                    icon="eye"
-                    active={true}
-                    block />
-              }
+                block
+              />
+              {http_url && (
+                <Button
+                  to={http_url}
+                  type="view"
+                  icon="eye"
+                  active={true}
+                  block
+                />
+              )}
               <Splitter />
               <Button
-                onClick={() => this.handleClickDelete()}
+                onClick={this.handleClickDelete}
                 type="delete"
                 active={true}
                 icon="trash"
-                block />
+                block
+              />
             </div>
           </div>
-
         </HotKeys>
       </DocumentTitle>
     );
@@ -221,28 +235,32 @@ DocumentEdit.propTypes = {
   params: PropTypes.object.isRequired,
   router: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
-  config: PropTypes.object.isRequired
+  config: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   currentDocument: state.collections.currentDocument,
   isFetching: state.collections.isFetching,
   fieldChanged: state.metadata.fieldChanged,
   updated: state.collections.updated,
   errors: state.utils.errors,
-  config: state.config.config
+  config: state.config.config,
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  fetchDocument,
-  deleteDocument,
-  putDocument,
-  createDocument,
-  updateTitle,
-  updateBody,
-  updatePath,
-  clearErrors
-}, dispatch);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      fetchDocument,
+      deleteDocument,
+      putDocument,
+      createDocument,
+      updateTitle,
+      updateBody,
+      updatePath,
+      clearErrors,
+    },
+    dispatch
+  );
 
 export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(DocumentEdit)

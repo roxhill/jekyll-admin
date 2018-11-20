@@ -1,7 +1,7 @@
 title: Your awesome title
 
 # Load the admin interface.
-gems:
+plugins:
   - jekyll-admin
 
 # Exclude these files from being processed.
@@ -16,6 +16,9 @@ jekyll_admin:
     versioning:
         prod_branch_name: "master"
         draft_branch_prefix: "draft-"
+
+# show draft posts
+show_drafts: true
 
 defaults:
   -
