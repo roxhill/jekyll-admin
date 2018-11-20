@@ -8,7 +8,6 @@ import metadata from './metadata';
 import drafts from './drafts';
 import datafiles from './datafiles';
 import staticfiles from './staticfiles';
-import versions from './versions';
 import utils from './utils';
 import notifications from './notifications';
 
@@ -21,7 +20,6 @@ export default combineReducers({
   drafts,
   datafiles,
   staticfiles,
-  versions,
   utils,
   notifications,
 });
