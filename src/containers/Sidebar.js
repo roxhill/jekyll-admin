@@ -66,11 +66,6 @@ export class Sidebar extends Component {
         translation: 'configuration',
         splitterBefore: true,
       },
-      versions: {
-        icon: 'code-fork',
-        link: 'versions',
-        translation: 'versions'
-      },
     };
 
     const defaultLinks = _.keys(defaults);
