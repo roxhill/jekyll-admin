@@ -29,16 +29,14 @@ export default function Breadcrumbs({ splat, type }) {
     });
   }
 
-  let nodes = _.map(
-    links,
-    (link, i) =>
-      link.href ? (
-        <li key={i}>
-          <Link to={link.href}>{link.label}</Link>
-        </li>
-      ) : (
-        <li key={i}>{toTitleCase(link.label)}</li>
-      )
+  let nodes = _.map(links, (link, i) =>
+    link.href ? (
+      <li key={i}>
+        <Link to={link.href}>{link.label}</Link>
+      </li>
+    ) : (
+      <li key={i}>{toTitleCase(link.label)}</li>
+    )
   );
 
   return (
