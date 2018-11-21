@@ -4,5 +4,4 @@ set -e
 
 script/branding
 
-cd ./spec/fixtures/site || exit
-RACK_ENV=development bundle exec jekyll serve --verbose --watch --host 0.0.0.0
+RACK_ENV=development bundle exec jekyll serve --source ./spec/fixtures/site --verbose --watch --host 0.0.0.0

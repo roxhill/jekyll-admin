@@ -39,4 +39,4 @@ export const staticfileAPIUrl = filename => `${API}/static_files/${filename}`;
 
 export const verionsAPIUrl = () => `${API}/version`;
 export const versionsUpdateAPIUrl = () => `${API}/version/update`;
-export const versionsPublishAPIUrl = filename => `${API}/version/${filename}`;
+export const versionsPublishAPIUrl = filename => `${API}/version/publish/${filename}`;

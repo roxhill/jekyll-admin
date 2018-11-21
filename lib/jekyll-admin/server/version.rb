@@ -11,7 +11,7 @@ module JekyllAdmin
         json({ :commit => commit_id })
       end
 
-      get "/publish/:collection_id/*?/?:path.:ext" do
+      get "/publish/*?/?:path.:ext" do
         if git_repo
           publish_file path
         end

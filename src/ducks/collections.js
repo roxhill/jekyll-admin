@@ -163,8 +163,8 @@ export const deleteDocument = (collection, directory, filename) => dispatch => {
 export const publishDocument = (path) => (dispatch, getState) => {
   return get(
     versionsPublishAPIUrl(path),
-    { type: FETCH_DOCUMENT_SUCCESS, name: 'doc' },
-    { type: FETCH_DOCUMENT_FAILURE, name: 'error' },
+    { type: DELETE_DOCUMENT_SUCCESS },
+    { type: DELETE_DOCUMENT_SUCCESS },
     dispatch
   );
 };
