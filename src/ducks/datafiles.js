@@ -98,7 +98,7 @@ export const putDataFile = (
 export const deleteDataFile = (directory, filename) => dispatch => {
   return fetch(datafileAPIUrl(directory, filename), {
     method: 'DELETE',
-    credentials: 'same-origin',
+    credentials: 'include',
   })
     .then(data => {
       dispatch({ type: DELETE_DATAFILE_SUCCESS });

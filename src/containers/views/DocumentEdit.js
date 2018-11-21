@@ -93,8 +93,9 @@ export class DocumentEdit extends Component {
 
   handleClickCopy = e => {
     preventDefault(e);
+    const { createDocument, params, currentDocument, updateTitle, updatePath } = this.props;
+    updatePath('');
     updateTitle('Copy of ' + currentDocument.title);
-    const { createDocument, params } = this.props;
     const collection = params.collection_name;
     const [directory, ...rest] = params.splat;
     createDocument(collection, directory);
@@ -102,11 +103,8 @@ export class DocumentEdit extends Component {
 
   handleClickPublish = e => {
     preventDefault(e);
-    const { publishDocument, params } = this.props;
-    const collection = params.collection_name;
-    const [directory, ...rest] = params.splat;
-    const filename = rest.join('.');
-    publishDocument(collection, directory, filename);
+    const { publishDocument, currentDocument } = this.props;
+    publishDocument(currentDocument.path);
   };
 
   render() {

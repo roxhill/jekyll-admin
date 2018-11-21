@@ -52,7 +52,7 @@ export const get = (url, action_success, action_failure, dispatch) => {
 export const post = (url, body, action_success, action_failure, dispatch) => {
   return fetch(url, {
     method: 'POST',
-    credentials: "include",
+    credentials: 'include',
     body
   })
   .then(res => res.json())

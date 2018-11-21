@@ -13,6 +13,7 @@ import {
   collectionsAPIUrl,
   collectionAPIUrl,
   documentAPIUrl,
+  versionsPublishAPIUrl
 } from '../constants/api';
 
 // Action Types
@@ -145,7 +146,7 @@ export const putDocument = (collection, directory, filename) => (
 export const deleteDocument = (collection, directory, filename) => dispatch => {
   return fetch(documentAPIUrl(collection, directory, filename), {
     method: 'DELETE',
-    credentials: 'same-origin',
+    credentials: 'include',
   })
     .then(data => {
       dispatch({ type: DELETE_DOCUMENT_SUCCESS });
@@ -159,11 +160,13 @@ export const deleteDocument = (collection, directory, filename) => dispatch => {
     );
 };
 
-export const publishDocument = (collection, directory, filename) => (
-  dispatch,
-  getState
-) => {
-
+export const publishDocument = (path) => (dispatch, getState) => {
+  return get(
+    versionsPublishAPIUrl(path),
+    { type: FETCH_DOCUMENT_SUCCESS, name: 'doc' },
+    { type: FETCH_DOCUMENT_FAILURE, name: 'error' },
+    dispatch
+  );
 };
 
 

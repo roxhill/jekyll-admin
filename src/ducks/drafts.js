@@ -92,7 +92,7 @@ export const putDraft = (mode, directory, filename = '') => (
 export const deleteDraft = (directory, filename) => dispatch => {
   return fetch(draftAPIUrl(directory, filename), {
     method: 'DELETE',
-    credentials: 'same-origin',
+    credentials: 'include',
   })
     .then(data => {
       dispatch({ type: DELETE_DRAFT_SUCCESS });
