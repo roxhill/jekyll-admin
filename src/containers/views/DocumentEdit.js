@@ -78,13 +78,16 @@ export class DocumentEdit extends Component {
   };
 
   handleClickDelete = () => {
-    const { deleteDocument, params } = this.props;
+    const { deleteDocument, publishDocument, currentDocument, params } = this.props;
+    const path = currentDocument.path;
     const [directory, ...rest] = params.splat;
     const filename = rest.join('.');
     const confirm = window.confirm(getDeleteMessage(filename));
     if (confirm) {
       const collection = params.collection_name;
-      deleteDocument(collection, directory, filename);
+      deleteDocument(collection, directory, filename).then(() => {
+        publishDocument(path);
+      });
       browserHistory.push(
         `${ADMIN_PREFIX}/collections/${collection}/${directory || ''}`
       );
