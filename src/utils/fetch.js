@@ -17,7 +17,7 @@ import {
  * @return {Function} dispatch
  */
 export const get = (url, action_success, action_failure, dispatch) => {
-  return fetch(url, { credentials: "include" })
+  return fetch(url, { credentials: 'include' })
     .then(res => res.json())
     .then(data =>
       dispatch({
@@ -128,7 +128,7 @@ return fetch(url, {
 export const del = (url, action_success, action_failure, dispatch) => {
   return fetch(url, {
     method: 'DELETE',
-    credentials: "include"
+    credentials: 'include',
   })
     .then(data =>
       dispatch({

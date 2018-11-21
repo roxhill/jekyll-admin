@@ -11,8 +11,6 @@ const defaultProps = {
   collections,
 };
 
-const nonCollectionLinks = ['pages', 'datafiles', 'staticfiles', 'configuration', 'versions'];
-
 const actions = {
   fetchCollections: jest.fn(),
 };
