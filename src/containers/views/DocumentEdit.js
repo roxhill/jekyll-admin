@@ -18,7 +18,8 @@ import {
   fetchDocument,
   deleteDocument,
   putDocument,
-  createDocument
+  createDocument,
+  publishDocument,
 } from '../../ducks/collections';
 import { updateTitle, updateBody, updatePath } from '../../ducks/metadata';
 import { clearErrors } from '../../ducks/utils';
@@ -90,16 +91,22 @@ export class DocumentEdit extends Component {
     }
   };
 
-  handleClickCopy = (e) => {
-    const { createDocument, params } = this.props;
-
-    // Prevent the default event from bubbling
+  handleClickCopy = e => {
     preventDefault(e);
-
+    updateTitle('Copy of ' + currentDocument.title);
+    const { createDocument, params } = this.props;
     const collection = params.collection_name;
     const [directory, ...rest] = params.splat;
-    const filename = 'copy-' + rest.join('.');
-    createDocument(collection, directory || '/');
+    createDocument(collection, directory);
+  };
+
+  handleClickPublish = e => {
+    preventDefault(e);
+    const { publishDocument, params } = this.props;
+    const collection = params.collection_name;
+    const [directory, ...rest] = params.splat;
+    const filename = rest.join('.');
+    publishDocument(collection, directory, filename);
   };
 
   render() {
@@ -185,14 +192,6 @@ export class DocumentEdit extends Component {
                 icon="save"
                 block
               />
-              <Button
-                onClick={this.handleClickCopy}
-                type="copy"
-                active={true}
-                triggered={updated}
-                icon="copy"
-                block
-              />
               {http_url && (
                 <Button
                   to={http_url}
@@ -210,6 +209,20 @@ export class DocumentEdit extends Component {
                 icon="trash"
                 block
               />
+              <Button
+                onClick={this.handleClickCopy}
+                type="copy"
+                active={true}
+                icon="plus-square"
+                block
+              />
+              <Button
+                onClick={this.handleClickPublish}
+                type="publish"
+                active={true}
+                icon="upload"
+                block
+              />
             </div>
           </div>
         </HotKeys>
@@ -224,6 +237,7 @@ DocumentEdit.propTypes = {
   deleteDocument: PropTypes.func.isRequired,
   putDocument: PropTypes.func.isRequired,
   createDocument: PropTypes.func.isRequired,
+  publishDocument: PropTypes.func.isRequired,
   updateTitle: PropTypes.func.isRequired,
   updateBody: PropTypes.func.isRequired,
   updatePath: PropTypes.func.isRequired,
@@ -254,6 +268,7 @@ const mapDispatchToProps = dispatch =>
       deleteDocument,
       putDocument,
       createDocument,
+      publishDocument,
       updateTitle,
       updateBody,
       updatePath,

@@ -159,6 +159,14 @@ export const deleteDocument = (collection, directory, filename) => dispatch => {
     );
 };
 
+export const publishDocument = (collection, directory, filename) => (
+  dispatch,
+  getState
+) => {
+
+};
+
+
 const generateFilenameFromTitle = (metadata, collection) => {
   if (collection == 'posts') {
     // if date is provided, use it, otherwise generate it with today's date

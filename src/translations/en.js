@@ -73,4 +73,10 @@ export const labels = {
     label: 'Switch View to GUI Editor',
     triggeredLabel: 'Switch View to Raw Editor',
   },
+  copy: {
+    label: 'Copy',
+  },
+  publish: {
+    label: 'Publish',
+  },
 };

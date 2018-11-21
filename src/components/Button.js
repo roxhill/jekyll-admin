@@ -16,8 +16,8 @@ export default function Button({
   const btnClass = classnames({
     btn: true,
     'btn-active': active,
-    'btn-success': active && (type == 'save' || type == 'create'),
-    'btn-delete': type == 'delete',
+    'btn-success': active && (type == 'save' || type == 'create' || type == 'copy'),
+    'btn-delete': (type == 'delete' || type == 'publish'),
     'btn-view': type == 'view',
     'btn-inactive': !active,
     'btn-fat': block,
@@ -51,15 +51,11 @@ export default function Button({
     case 'new':
       label = labels.new.label;
       break;
-    case 'publish':
-      label = labels.publish.label;
-      break;
-    case 'load':
-      label = labels.load.label;
-      break;
     case 'copy':
       label = labels.copy.label;
-      triggeredLabel = labels.copy.triggeredLabel;
+      break;
+    case 'publish':
+      label = labels.publish.label;
       break;
     default:
   }
