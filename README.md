@@ -1,34 +1,7 @@
 
-# Roxhill's marketing site
+# Setting up for development of the plugin
 
-Roxhill's main site is served via Amazon Cloudfront out of an S3 bucket named `roxhillmedia.com` with a staging version and admin page served from a container in an EC2 instance. The homepage is generated from the files in _this_ repository but the code completing the _container_ is found on the `marketing` branch of the main `roxhill` repository. Every change to the master branch of the marketing site causes the container to be redeployed.
-
-The site uses the Ruby-based tool [Jekyll](https://jekyllrb.com). This fork of the Jekyll Admin plugin adds publish functionality.
-
-#### Principles
-
-Jekyll-related images are stored in the AWS North Virginia region. The images are:
-
-* `roxhill/jekyll-proxy:prod` _(last pushed in 2017)._
-* `roxhill/marketing-src:prod`
-  This is the constantly updated site. There are now 1870 images in the repository. Previously Amazon applied a limit of 1,000 to the number of images in a repository but this has since been increased to **10,000**.
-* `roxhill/jekyll:prod` _(last updated September 2019)._
-  The image is deployed from the `jekyll-admin` repository in GitHub.
-
-The marketing site is driven by changes to the master branch of the `roxhill/marketing` repository. The `/.circleci/config.yml` file manifests the following steps:
-
-1. GitHub signals CircleCI to checkout the repository and login to AWS
-2. The Roxhill `roxhill/jekyll:prod` image is used to build a new version of the site with the admin plugin attached
-3. Most files that have `.html` extensions are changed so that those extensions are not included
-4. The files are then synced to S3 in the `roxhillmedia.com` bucket
-5. Specific redirects described in `/_data/redirects.yml` are actioned on S3 via the AWS S3 API.
-6. Amazon Cloudfront is instructed to invalidate its cache
-7. A new marketing-src image is built
-8. A new marketing-src image is pushed to the Amazon ECS repository
-
-The CircleCI part takes roughly 3 minutes to complete.
-
-Because the files are served out of S3 there is no automatic restart of the executing task in AWS. ECS has a "Cluster" named `jekyll-cluster-1709281557` of a single EC2-launched task (the actual instance is listed under the `ECS Instances` tab). The containers are listed under the `Tasks` tab by clicking on the ID for the single task. `nginx` and `jekyll` should both be running but `src` will not be. Clicking the task will show when it restarted.
+For background information please see the README on the marketing repository at https://github.com/roxhill/marketing.
 
 #### Ruby Setup
 
@@ -86,17 +59,6 @@ $ git clone git@github.com:roxhill/jekyll-admin.git jekyll-admin
 $ git clone git@github.com:roxhill/marketing.git site
 ```
 
-If desired, start and stop the Docker Compose development environment from inside the `roxhill-marketing` repo:
-
-```
-# Start the dev environment.
-# Requires a working AWS login, using roxhillapi:/ops/bin/local/login
-$ ./start-dev-env
-
-# Stop the dev environment.
-$ ./stop-dev-env
-```
-
 When running, the public site should be visible on http://127.0.0.1:4000. The admin page has "admin" appended, i.e. http://127.0.0.1:4000/admin (this principle is mirrored on the live staging site at https://marketing.roxhillmedia.com/admin after login. Everyone shares the same login to the admin site with credentials available from the team). In general `Save` buttons commit a page to the staging site, and `Publish` commits to the public site.
 
 To make changes to the admin panels follow the instructions in https://jekyll.github.io/jekyll-admin/development/. Enter the `jekyll-admin` repo and do the following commands. These will build a local `_site` directory inside the repo from the files in the `site` checkout described above.
@@ -108,21 +70,3 @@ $ script/test-server
 ```
 
 **Note that deleting or publishing from this local checkout will still apply git commands that MODIFY THE MAIN SITE. Work network-isolated or take other precautions.**
-
-#### Failure scenarios
-
-##### “Marketing site is not working at all” and marketing.roxhillmedia.com returns 502 or similar
-
-EC2 will occasionally restart the container, and that’s why it needs the `src` image. However, the volume is preserved during the restart so saved changes are still there after the machine has booted up again.
-
-##### Deleting a page fails specifying a plausible but not real filename
-
-For example:
-
-```
-/usr/local/lib/ruby/gems/2.6.0/gems/jekyll-3.8.6/lib/jekyll/reader.rb:42: warning: conflicting chdir during another chdir block
-             Error: No such file or directory @ rb_sysopen - /Users/tony/Documents/jekyll-admin/spec/fixtures/site/insight-and-events/tools
-             Error: Run jekyll build --trace for more information.
-```
-
-This is under investigation but appears to be a race condition. See https://github.com/jekyll/jekyll-admin/issues/289#issuecomment-278365937.
