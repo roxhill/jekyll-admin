@@ -14,7 +14,7 @@ import InputPath from '../../components/form/InputPath';
 import InputTitle from '../../components/form/InputTitle';
 import MarkdownEditor from '../../components/MarkdownEditor';
 import Metadata from '../MetaFields';
-import { fetchPage, deletePage, putPage } from '../../ducks/pages';
+import { fetchPage, deletePage, putPage, publishPage } from '../../ducks/pages';
 import { updateTitle, updateBody, updatePath } from '../../ducks/metadata';
 import { clearErrors } from '../../ducks/utils';
 import { injectDefaultFields } from '../../utils/metadata';
@@ -65,15 +65,25 @@ export class PageEdit extends Component {
   };
 
   handleClickDelete(name) {
-    const { deletePage, params } = this.props;
+    const { deletePage, publishPage, page, params } = this.props;
+    const path = page.path;
     const confirm = window.confirm(getDeleteMessage(name));
     if (confirm) {
       const [directory, ...rest] = params.splat;
       const filename = rest.join('.');
-      deletePage(directory, filename);
+      deletePage(directory, filename).then(() => {
+        publishPage(path);
+      });
       browserHistory.push(`${ADMIN_PREFIX}/pages/${directory || ''}`);
     }
   }
+
+  handleClickPublish = e => {
+    preventDefault(e);
+    const { publishPage, page } = this.props;
+    const path = page.path;
+    publishPage(path);
+  };
 
   render() {
     const {
@@ -151,19 +161,28 @@ export class PageEdit extends Component {
                 icon="save"
                 block
               />
-              <Button
-                to={http_url}
-                type="view"
-                icon="eye"
-                active={true}
-                block
-              />
+              {http_url && (
+                <Button
+                  to={http_url}
+                  type="view"
+                  icon="eye"
+                  active={true}
+                  block
+                />
+              )}
               <Splitter />
               <Button
                 onClick={() => this.handleClickDelete(name)}
                 type="delete"
                 active={true}
                 icon="trash"
+                block
+              />
+              <Button
+                onClick={this.handleClickPublish}
+                type="publish"
+                active={true}
+                icon="upload"
                 block
               />
             </div>
@@ -178,6 +197,7 @@ PageEdit.propTypes = {
   page: PropTypes.object.isRequired,
   fetchPage: PropTypes.func.isRequired,
   deletePage: PropTypes.func.isRequired,
+  publishPage: PropTypes.func.isRequired,
   putPage: PropTypes.func.isRequired,
   updateTitle: PropTypes.func.isRequired,
   updateBody: PropTypes.func.isRequired,
@@ -207,6 +227,7 @@ const mapDispatchToProps = dispatch =>
     {
       fetchPage,
       deletePage,
+      publishPage,
       putPage,
       updateTitle,
       updateBody,

@@ -3,7 +3,7 @@ import { CLEAR_ERRORS, validationError } from './utils';
 import { get, put } from '../utils/fetch';
 import { validator } from '../utils/validation';
 import { slugify, trimObject } from '../utils/helpers';
-import { pagesAPIUrl, pageAPIUrl } from '../constants/api';
+import { pagesAPIUrl, pageAPIUrl, versionsPublishAPIUrl } from '../constants/api';
 import {
   getTitleRequiredMessage,
   getFilenameNotValidMessage,
@@ -119,6 +119,15 @@ export const deletePage = (directory, filename) => dispatch => {
         error,
       })
     );
+};
+
+export const publishPage = (path) => (dispatch, getState) => {
+  return get(
+    versionsPublishAPIUrl(path),
+    { type: DELETE_PAGE_SUCCESS },
+    { type: DELETE_PAGE_SUCCESS },
+    dispatch
+  );
 };
 
 const validatePage = metadata =>

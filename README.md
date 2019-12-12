@@ -1,50 +1,72 @@
-[![Gem Version](https://img.shields.io/gem/v/jekyll-admin.svg)](https://rubygems.org/gems/jekyll-admin)
-[![Build Status](https://travis-ci.org/jekyll/jekyll-admin.svg?branch=master)](https://travis-ci.org/jekyll/jekyll-admin)
-[![Build status](https://ci.appveyor.com/api/projects/status/biop1r6ae524xlm2/branch/master?svg=true)](https://ci.appveyor.com/project/benbalter/jekyll-admin/branch/master)
-[![Coverage Status](https://coveralls.io/repos/github/jekyll/jekyll-admin/badge.svg?branch=master)](https://coveralls.io/github/jekyll/jekyll-admin?branch=master)
-[![NPM Dependencies](https://david-dm.org/jekyll/jekyll-admin.svg)](https://david-dm.org/jekyll/jekyll-admin)
 
-A Jekyll plugin that provides users with a traditional CMS-style graphical interface to author content and administer Jekyll sites. The project is divided into two parts. A Ruby-based HTTP API that handles Jekyll and filesystem operations, and a JavaScript-based front end, built on that API.
+# Setting up for development of the plugin
 
-![screenshot of Jekyll Admin](/screenshot.png)
+For background information please see the README on the marketing repository at https://github.com/roxhill/marketing.
 
-## Installation
+#### Ruby Setup
 
-Refer to the [installing plugins](https://jekyllrb.com/docs/plugins/#installing-a-plugin) section of Jekyll's documentation and install the `jekyll-admin` plugin as you would any other plugin. Here's the short version:
+To setup your system to begin development follow the instructions for your system at https://jekyllrb.com/docs/installation/#requirements.
 
-1.  Add the following to your site's Gemfile:
+For the Mac the steps begin with getting the command-line tools locally. With luck, they are already present on the system:
 
-    ```ruby
-    gem 'jekyll-admin', group: :jekyll_plugins
-    ```
-
-2.  Run `bundle install`
-
-## Usage
-
-1.  Start Jekyll as you would normally (`bundle exec jekyll serve`)
-2.  Navigate to `http://localhost:4000/admin` to access the administrative interface
-
-## Options
-
-Jekyll Admin related options can be specified in `_config.yml`
-under a key called `jekyll_admin`. Currently it has only one option `hidden_links`
-which is for hiding unwanted links on the sidebar. The following keys under `hidden_links` can be used in order to hide default links;
-
-```yaml
-jekyll_admin:
-  hidden_links:
-    - posts
-    - pages
-    - staticfiles
-    - datafiles
-    - configuration
+```
+$ xcode-select --install
+xcode-select: error: command line tools are already installed, use "Software Update" to install updates
 ```
 
-## Contributing
+Then get a recent version of Ruby. The `New Starter : Setup` instructions on the Roxhill Wiki describe how to get Homebrew but the command is included below if this is yet to be done:
 
-Interested in contributing to Jekyll Admin? We’d love your help. Jekyll Admin is an open source project, built one contribution at a time by users like you. See [the contributing instructions](.github/CONTRIBUTING.md), and [the development docs](http://jekyll.github.io/jekyll-admin/development/) for more information.
+```
+# Install Homebrew if it wasn't done with setup
+# /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+$ brew install ruby
+...
+$ echo 'export PATH="/usr/local/opt/ruby/bin:$PATH"' >> ~/.bash_profile
+```
 
-## License
+At this point relaunch your terminal to make the updates to the `.bash_profile` take effect. Get the newly installed Ruby version and update the PATH again, this time with the future gem path using only the major.minor.0 portion of the Ruby version.
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+```
+$ ruby -v
+ruby 2.6.5p114 (2019-10-01 revision 67812) [x86_64-darwin18]
+$ echo 'export PATH="$HOME/.gem/ruby/2.6.0/bin:$PATH"' >> ~/.bash_profile
+```
+
+Restart the terminal again. Because macOS already has an older version of Ruby installed with the OS, it isn't recommended to try installing Bundler and Jekyll globally. Doing so gives an error like `"bundle" from bundler conflicts with /usr/local/lib/ruby/gems/2.6.0/bin/bundle`. However, in variance with the printed instructions you still need `sudo` to install Jekyll to avoid `Permission denied @ rb_sysopen` errors. Note a specific version of Bundler is required.
+
+```
+$ sudo gem install --user-install bundler -v1.17
+$ sudo gem install --user-install jekyll
+...
+Done installing documentation for public_suffix, addressable, colorator, http_parser.rb, eventmachine, em-websocket, concurrent-ruby, i18n, ffi, sassc, jekyll-sass-converter, rb-fsevent, rb-inotify, listen, jekyll-watch, kramdown, kramdown-parser-gfm, liquid, mercenary, forwardable-extended, pathutil, rouge, safe_yaml, unicode-display_width, terminal-table, jekyll after 24 seconds
+26 gems installed
+```
+
+Jekyll's admin plugin requires Node but some of the dependencies aren't available for the latest version. An earlier version of this will need to be installed too, which won't be symlinked because it's a variant install.
+
+```
+brew install node@10
+echo 'export PATH="/usr/local/opt/node@10/bin:$PATH"' >> ~/.bash_profile
+```
+
+#### Development Setup
+
+The following command checks out the marketing branch of the main repository, the locally-forked `jekyll-admin` plugin and the marketing repository (which should be renamed `site` to match the symbolic link in the plugin).
+
+```
+$ git clone -b marketing git@github.com:roxhill/roxhill.git roxhill-marketing
+$ git clone git@github.com:roxhill/jekyll-admin.git jekyll-admin
+$ git clone git@github.com:roxhill/marketing.git site
+```
+
+When running, the public site should be visible on http://127.0.0.1:4000. The admin page has "admin" appended, i.e. http://127.0.0.1:4000/admin (this principle is mirrored on the live staging site at https://marketing.roxhillmedia.com/admin after login. Everyone shares the same login to the admin site with credentials available from the team). In general `Save` buttons commit a page to the staging site, and `Publish` commits to the public site.
+
+To make changes to the admin panels follow the instructions in https://jekyll.github.io/jekyll-admin/development/. Enter the `jekyll-admin` repo and do the following commands. These will build a local `_site` directory inside the repo from the files in the `site` checkout described above.
+
+```
+$ script/bootstrap
+$ script/build
+$ script/test-server
+```
+
+**Note that deleting or publishing from this local checkout will still apply git commands that MODIFY THE MAIN SITE. Work network-isolated or take other precautions.**
