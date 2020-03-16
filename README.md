@@ -54,7 +54,6 @@ echo 'export PATH="/usr/local/opt/node@10/bin:$PATH"' >> ~/.bash_profile
 The following command checks out the marketing branch of the main repository, the locally-forked `jekyll-admin` plugin and the marketing repository (which should be renamed `site` to match the symbolic link in the plugin).
 
 ```
-$ git clone -b marketing git@github.com:roxhill/roxhill.git roxhill-marketing
 $ git clone git@github.com:roxhill/jekyll-admin.git jekyll-admin
 $ git clone git@github.com:roxhill/marketing.git site
 ```
