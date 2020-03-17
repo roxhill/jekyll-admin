@@ -1,7 +1,8 @@
 version: "3.7"
 services:
   jekyll-admin:
-    image: roxhill-jekyll-admin:latest
+    build:
+      context: .
     volumes:
       - .:/usr/src/jekyll-admin
       - ../marketing:/usr/src/site
