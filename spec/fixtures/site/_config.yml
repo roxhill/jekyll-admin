@@ -3,6 +3,7 @@ title: Your awesome title
 # Load the admin interface and some plugins for testing.
 plugins:
   - jekyll-admin
+  - jekyll-redirect-from
 
 # Exclude these files from being processed.
 exclude:
@@ -11,6 +12,9 @@ exclude:
   - README.md
 
 foo: bar
+
+host_view: https://roxhillmedia.com
+host_preview: http://127.0.0.1:4000
 
 # show draft posts
 show_drafts: true
