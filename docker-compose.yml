@@ -4,13 +4,11 @@ services:
     build:
       context: .
     volumes:
-      - .:/usr/src/jekyll-admin
-      - ../marketing:/usr/src/site
+      - ./src:/usr/src/jekyll-admin/src
+      - ./spec:/usr/src/jekyll-admin/spec
     ports:
       - 4000:4000
-    command:
-      - /bin/bash
-      - -c
-      - |
-        npm install --no-save
-        script/server-frontend
+      - 3000:3000
+    command: script/server-frontend
+volumes:
+  node_modules:

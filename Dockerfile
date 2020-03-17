@@ -10,7 +10,8 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
   && apt install -y nodejs build-essential
 
 COPY . /usr/src/jekyll-admin
-VOLUME /usr/src/jekyll-admin
 WORKDIR /usr/src/jekyll-admin
+VOLUME /usr/src/jekyll-admin/src
+VOLUME /usr/src/jekyll-admin/spec
 
 RUN script/bootstrap
