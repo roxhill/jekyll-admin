@@ -56,6 +56,9 @@ export const labels = {
     label: 'Save',
     triggeredLabel: 'Saved',
   },
+  preview: {
+    label: 'Preview'
+  },
   create: {
     label: 'Create',
     triggeredLabel: 'Created',

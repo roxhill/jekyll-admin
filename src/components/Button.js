@@ -31,6 +31,9 @@ export default function Button({
       label = labels.save.label;
       triggeredLabel = labels.save.triggeredLabel;
       break;
+    case 'preview':
+      label = labels.preview.label;
+      break;
     case 'create':
       label = labels.create.label;
       triggeredLabel = labels.create.triggeredLabel;

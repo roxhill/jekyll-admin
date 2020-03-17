@@ -114,6 +114,11 @@ export class PageEdit extends Component {
     const { name, raw_content, http_url, front_matter } = page;
     const [directory, ...rest] = params.splat;
 
+    const hostForView = config.content.host_view || window.location.origin;
+    const urlForView = `${hostForView}${page.url}`;
+    const hostForPreview = config.content.host_preview || window.location.origin;
+    const urlForPreview = `${hostForPreview}${page.url}`;
+
     const title = front_matter && front_matter.title ? front_matter.title : '';
     const metafields = injectDefaultFields(
       config,
@@ -161,10 +166,19 @@ export class PageEdit extends Component {
                 icon="save"
                 block
               />
-              {http_url && (
+              {urlForView && (
                 <Button
-                  to={http_url}
+                  to={urlForView}
                   type="view"
+                  icon="eye"
+                  active={true}
+                  block
+                />
+              )}
+              {urlForPreview && (
+                <Button
+                  to={urlForPreview}
+                  type="preview"
                   icon="eye"
                   active={true}
                   block
