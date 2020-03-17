@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+  jekyll-admin:
+    image: roxhill-jekyll-admin:latest
+    volumes:
+      - .:/usr/src/jekyll-admin
+      - ../marketing:/usr/src/site
+    ports:
+      - 4000:4000
+    command:
+      - /bin/bash
+      - -c
+      - |
+        npm install --no-save
+        script/server-frontend
